@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-require 'plausible_api/api/stats/realtime/visitors'
-require 'plausible_api/api/stats/aggregate'
-require 'plausible_api/api/stats/timeseries'
+require 'plausible_api/stats/realtime/visitors'
+require 'plausible_api/stats/aggregate'
+require 'plausible_api/stats/timeseries'
 
 require 'faraday'
 require 'json'

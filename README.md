@@ -20,9 +20,9 @@ You have all these options to get the aggregate stats
 c.aggregate
 
 # Set parameters (period, metrics, filter, date)
-c.aggregate({ period: '3d' })
-c.aggregate({ period: '3d', metrics: 'visitors,pageviews' })
-c.aggregate({ period: '3d', metrics: 'visitors,pageviews', filter: 'event:page==/order/confirmation' })
+c.aggregate({ period: '30d' })
+c.aggregate({ period: '30d', metrics: 'visitors,pageviews' })
+c.aggregate({ period: '30d', metrics: 'visitors,pageviews', filters: 'event:page==/order/confirmation' })
 
 # You'll get something like this:
 => {"bounce_rate"=>{"value"=>81.0}, "pageviews"=>{"value"=>29}, "visit_duration"=>{"value"=>247.0}, "visitors"=>{"value"=>14}}
@@ -36,11 +36,11 @@ You have all these options to get the timeseries
 c.timeseries
 
 # Set parameters (period, metrics, filter, date)
-c.timeseries({ period: '3d' })
-c.timeseries({ period: '3d', filter: 'event:page==/order/confirmation', date: '2020/02/10' })
+c.timeseries({ period: '7d' })
+c.timeseries({ period: '7d', filters: 'event:page==/order/confirmation', date: '2020/02/10' })
 
 # You'll get something like this:
-=> [{"date"=>"2021-01-11", "value"=>100}, {"date"=>"2021-01-12", "value"=>120}, {"date"=>"2021-01-13", "value"=>80}]
+=> [{"date"=>"2021-01-11", "value"=>100}, {"date"=>"2021-01-12", "value"=>120}, {"date"=>"2021-01-13", "value"=>80}...]
 ```
 
 ### Realtime >> Visitors

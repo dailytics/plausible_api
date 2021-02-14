@@ -9,7 +9,7 @@ gem 'plausible_api'
 ```
 Then you need to initialize a Client with your `site_id` (the domain) and your `token`.
 ```rb
-c = PlausibleApi::Client.new(site_id: 'dailytics.com', token: '123123')
+c = PlausibleApi::Client.new('dailytics.com', '123123') 
 ```
 
 ### Stats > Aggregate
@@ -19,7 +19,7 @@ You have all these options to get the aggregate stats
 # Use the default parameters (3mo period + the 4 main metrics)
 c.aggregate
 
-# Set parameters (period, metrics, filter, date)
+# Set parameters (period, metrics, filter, compare)
 c.aggregate({ period: '30d' })
 c.aggregate({ period: '30d', metrics: 'visitors,pageviews' })
 c.aggregate({ period: '30d', metrics: 'visitors,pageviews', filters: 'event:page==/order/confirmation' })
@@ -35,9 +35,9 @@ You have all these options to get the timeseries
 # Use the default parameters (3mo period)
 c.timeseries
 
-# Set parameters (period, metrics, filter, date)
+# Set parameters (period, filters, interval)
 c.timeseries({ period: '7d' })
-c.timeseries({ period: '7d', filters: 'event:page==/order/confirmation', date: '2020/02/10' })
+c.timeseries({ period: '7d', filters: 'event:page==/order/confirmation' })
 
 # You'll get something like this:
 => [{"date"=>"2021-01-11", "value"=>100}, {"date"=>"2021-01-12", "value"=>120}, {"date"=>"2021-01-13", "value"=>80}...]

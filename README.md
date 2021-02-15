@@ -10,6 +10,10 @@ gem 'plausible_api'
 Then you need to initialize a Client with your `site_id` (the domain) and your `token`.
 ```rb
 c = PlausibleApi::Client.new('dailytics.com', '123123') 
+
+# Test if the site and token are valid
+c.valid?
+=> true
 ```
 
 ### Stats > Aggregate

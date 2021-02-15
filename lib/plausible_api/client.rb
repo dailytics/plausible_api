@@ -31,7 +31,7 @@ module PlausibleApi
       call PlausibleApi::Stats::Realtime::Visitors.new
     end
 
-    def test
+    def valid?
       realtime_visitors.is_a? Integer
     end
 

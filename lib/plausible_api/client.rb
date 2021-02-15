@@ -4,8 +4,10 @@ require 'plausible_api/stats/realtime/visitors'
 require 'plausible_api/stats/aggregate'
 require 'plausible_api/stats/timeseries'
 
-require 'faraday'
 require 'json'
+require "net/http"
+require "uri"
+require "cgi"
 
 module PlausibleApi
   class Client
@@ -29,14 +31,22 @@ module PlausibleApi
       call PlausibleApi::Stats::Realtime::Visitors.new
     end
 
+    def test
+      realtime_visitors.is_a? Integer
+    end
+
     private
-    def call(api)
+    def call(api)      
       url = "#{BASE_URL}#{api.request_url.gsub('$SITE_ID', @site_id)}"
-      puts url
-      res = Faraday.get(url) do |req|
-        req.headers['Authorization'] = "Bearer #{@token}"
-      end
-      JSON.parse res.body
+      uri = URI.parse(url)
+
+      req = Net::HTTP::Get.new(uri.request_uri)
+      req.add_field('Authorization', "Bearer #{@token}")
+
+      http = Net::HTTP.new(uri.host, uri.port)
+      http.use_ssl = true  
+
+      JSON.parse http.request(req).body
     end
   end
 end

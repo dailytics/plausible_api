@@ -3,11 +3,11 @@
 module PlausibleApi 
   module Stats
     module Realtime
-      class Visitors
+      class Visitors < PlausibleApi::Stats::Base
         def initialize
         end
 
-        def request_url
+        def request_url_base
           "/api/v1/stats/realtime/visitors?site_id=$SITE_ID"
         end
 

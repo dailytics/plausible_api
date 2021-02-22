@@ -1,8 +1,10 @@
 # frozen_string_literal: true
 
+require 'plausible_api/stats/base'
 require 'plausible_api/stats/realtime/visitors'
 require 'plausible_api/stats/aggregate'
 require 'plausible_api/stats/timeseries'
+require 'plausible_api/stats/breakdown'
 
 require 'json'
 require "net/http"

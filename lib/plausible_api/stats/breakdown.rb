@@ -2,7 +2,7 @@
 
 module PlausibleApi
   module Stats
-    class Breakdown
+    class Breakdown < Base
       def initialize(options = {})
         @property = options[:property] || 'event:page' # required
         @period  = options[:period] || '30d' # required
@@ -12,15 +12,8 @@ module PlausibleApi
         @filters = options[:filters]
       end
 
-      def request_url
-        url = "/api/v1/stats/breakdown?site_id=$SITE_ID"
-        url += "&property=#{@property}"
-        url += "&period=#{@period}"
-        url += "&metrics=#{@metrics}" if @metrics
-        url += "&limit=#{@limit}" if @limit
-        url += "&page=#{@page}" if @page
-        url += "&filters=#{CGI.escape(@filters)}" if @filters
-        url
+      def request_url_base
+        "/api/v1/stats/breakdown?site_id=$SITE_ID"
       end
 
       def parse_response(body)

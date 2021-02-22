@@ -2,7 +2,7 @@
 
 module PlausibleApi
   module Stats
-    class Aggregate
+    class Aggregate < Base
       def initialize(options = {})
         @period  = options[:period] || '30d'
         @metrics = options[:metrics] || 'visitors,pageviews,bounce_rate,visit_duration'
@@ -10,13 +10,8 @@ module PlausibleApi
         @compare = options[:compare]
       end
 
-      def request_url
-        url = "/api/v1/stats/aggregate?site_id=$SITE_ID"
-        url += "&period=#{@period}" if @period
-        url += "&metrics=#{@metrics}" if @metrics
-        url += "&filters=#{CGI.escape(@filters)}" if @filters
-        url += "&compare=#{@compare}" if @compare
-        url
+      def request_url_base
+        "/api/v1/stats/aggregate?site_id=$SITE_ID"
       end
 
       def parse_response(body)

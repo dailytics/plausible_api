@@ -16,6 +16,10 @@ module PlausibleApi
         url += "&interval=#{@interval}" if @interval
         url
       end
+
+      def parse_response(body)
+        JSON.parse(body)['results']
+      end
     end
   end
 end

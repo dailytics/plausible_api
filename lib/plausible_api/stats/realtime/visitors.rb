@@ -10,6 +10,10 @@ module PlausibleApi
         def request_url
           "/api/v1/stats/realtime/visitors?site_id=$SITE_ID"
         end
+
+        def parse_response(body)
+          body.to_i
+        end
       end
     end
   end

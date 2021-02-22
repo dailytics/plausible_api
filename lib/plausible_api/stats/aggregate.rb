@@ -18,6 +18,10 @@ module PlausibleApi
         url += "&compare=#{@compare}" if @compare
         url
       end
+
+      def parse_response(body)
+        JSON.parse body
+      end
     end
   end
 end

@@ -27,6 +27,10 @@ module PlausibleApi
       call PlausibleApi::Stats::Timeseries.new(options)
     end
 
+    def breakdown(options = {})
+      call PlausibleApi::Stats::Breakdown.new(options)
+    end
+
     def realtime_visitors
       call PlausibleApi::Stats::Realtime::Visitors.new
     end
@@ -46,7 +50,7 @@ module PlausibleApi
       http = Net::HTTP.new(uri.host, uri.port)
       http.use_ssl = true  
 
-      JSON.parse http.request(req).body
+      api.parse_response http.request(req).body
     end
   end
 end

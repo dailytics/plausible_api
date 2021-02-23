@@ -9,6 +9,7 @@ module PlausibleApi
         @filters = options[:filters]
         @compare = options[:compare]
         @date    = options[:date]
+        @period = 'custom' if @date
       end
 
       def request_url_base

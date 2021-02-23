@@ -1,4 +1,4 @@
-# Plausible API (Work In Progress)
+# Plausible API Ruby Gem
 This is a simple wrapper to read the Plausible API with Ruby.
 It's based on the WIP [API guide](https://plausible.io/docs/stats-api)
 

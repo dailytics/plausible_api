@@ -37,6 +37,12 @@ class PlausibleApiBreakdownTest < Minitest::Test
       '/api/v1/stats/breakdown?site_id=$SITE_ID&period=30d&property=event:page&page=2'
   end
 
+  def test_date_parameter
+    breakdown = PlausibleApi::Stats::Breakdown.new({ period: 'custom', date: '2021-01-01,2021-01-31' })
+    assert_equal breakdown.request_url, 
+      '/api/v1/stats/breakdown?site_id=$SITE_ID&period=custom&property=event:page&date=2021-01-01,2021-01-31'
+  end
+
   def test_all_parameters
     breakdown = PlausibleApi::Stats::Breakdown.new({ property: 'visit:source', period: '7d', 
       metrics: 'pageviews', limit: 30, page:1, filters: 'event:page==/order/confirmation' })

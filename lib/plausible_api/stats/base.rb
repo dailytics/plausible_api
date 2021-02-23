@@ -21,6 +21,7 @@ module PlausibleApi
         url += "&property=#{@property}" if defined?(@property) && @property
         url += "&limit=#{@limit}" if defined?(@limit) && @limit
         url += "&page=#{@page}" if defined?(@page) && @page
+        url += "&date=#{@date}" if defined?(@date) && @date
         url
       end
 
@@ -43,23 +44,23 @@ module PlausibleApi
         e = 'Not a valid parameter. Allowed parameters are: '
         
         errors = []
-        if defined?(@period) && !@period.nil?
+        if defined?(@period) && @period
           errors.push({ period: "#{e}#{allowed_period.join(', ')}" }) unless allowed_period.include? @period
         end
-        if defined?(@metrics) && !@metrics.nil?
+        if defined?(@metrics) && @metrics
           metrics_array = @metrics.split(',') 
           errors.push({ metrics: "#{e}#{allowed_metrics.join(', ')}" }) unless metrics_array & allowed_metrics == metrics_array
         end
-        if defined?(@compare) && !@compare.nil?
+        if defined?(@compare) && @compare
           errors.push({ compare: "#{e}#{allowed_compare.join(', ')}" }) unless allowed_compare.include? @compare
         end
-        if defined?(@interval) && !@interval.nil?
+        if defined?(@interval) && @interval
           errors.push({ interval: "#{e}#{allowed_interval.join(', ')}" }) unless allowed_interval.include? @interval
         end
-        if defined?(@property) && !@property.nil?
+        if defined?(@property) && @property
           errors.push({ property: "#{e}#{allowed_property.join(', ')}" }) unless allowed_property.include? @property
         end
-        if defined?(@filters) && !@filters.nil?
+        if defined?(@filters) && @filters
           filters_array = @filters.to_s.split(';')
           filters_array.each do |f|
             parts = f.split("==")
@@ -67,11 +68,19 @@ module PlausibleApi
             errors.push({ filters: "Unknown metric for filter: #{parts[0]}" }) unless allowed_property.include? parts[0]
           end
         end
-        if defined?(@limit) && !@limit.nil?
+        if defined?(@limit) && @limit
           errors.push({ limit: "Limit param must be a positive number" }) unless @limit.is_a? Integer and @limit > 0
         end
-        if defined?(@page) && !@page.nil?
+        if defined?(@page) && @page
           errors.push({ page: "Page param must be a positive number" }) unless @page.is_a? Integer and @page > 0
+        end
+        if defined?(@date) && @date
+          errors.push({ date: 'You must define the period parameter as custom' }) unless @period == 'custom'
+          date_array = @date.split(",")
+          errors.push({ date: 'You must define start and end dates divided by comma' }) unless date_array.length == 2
+          regex = /\d{4}\-\d{2}\-\d{2}/
+          errors.push({ date: 'Wrong format for the start date' }) unless date_array[0] =~ regex
+          errors.push({ date: 'Wrong format for the end date' }) unless date_array[1] =~ regex
         end
         errors
       end

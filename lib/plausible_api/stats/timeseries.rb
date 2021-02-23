@@ -7,6 +7,7 @@ module PlausibleApi
         @period   = options[:period] || '30d'
         @filters  = options[:filters]
         @interval = options[:interval]
+        @date     = options[:date]
       end
 
       def request_url_base

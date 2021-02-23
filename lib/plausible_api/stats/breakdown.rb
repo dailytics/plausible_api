@@ -5,11 +5,12 @@ module PlausibleApi
     class Breakdown < Base
       def initialize(options = {})
         @property = options[:property] || 'event:page' # required
-        @period  = options[:period] || '30d' # required
-        @metrics = options[:metrics]
-        @limit   = options[:limit]
-        @page    = options[:page]
-        @filters = options[:filters]
+        @period   = options[:period] || '30d' # required
+        @metrics  = options[:metrics]
+        @limit    = options[:limit]
+        @page     = options[:page]
+        @filters  = options[:filters]
+        @date     = options[:date]
       end
 
       def request_url_base

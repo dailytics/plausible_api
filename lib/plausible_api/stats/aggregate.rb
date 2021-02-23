@@ -8,6 +8,7 @@ module PlausibleApi
         @metrics = options[:metrics] || 'visitors,pageviews,bounce_rate,visit_duration'
         @filters = options[:filters]
         @compare = options[:compare]
+        @date    = options[:date]
       end
 
       def request_url_base

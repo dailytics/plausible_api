@@ -24,9 +24,9 @@ class PlausibleApiBaseValidationTest < Minitest::Test
 
   def test_interval_validation
     timeseries = PlausibleApi::Stats::Timeseries.new({ interval: 'foo' })
-    assert !aggregate.valid?, timeseries.errors
+    assert !timeseries.valid?, timeseries.errors
     timeseries = PlausibleApi::Stats::Timeseries.new({ interval: 'month' })
-    assert !aggregate.valid?, timeseries.errors
+    assert timeseries.valid?, timeseries.errors
   end
 
   def test_filters_validation
@@ -55,13 +55,26 @@ class PlausibleApiBaseValidationTest < Minitest::Test
     breakdown = PlausibleApi::Stats::Breakdown.new({ limit: 1 })
     assert breakdown.valid?, breakdown.errors
   end
-  
+
   def test_page_validation
     breakdown = PlausibleApi::Stats::Breakdown.new({ page: 'foo' })
     assert !breakdown.valid?, breakdown.errors
     breakdown = PlausibleApi::Stats::Breakdown.new({ page: 0 })
     assert !breakdown.valid?, breakdown.errors
     breakdown = PlausibleApi::Stats::Breakdown.new({ page: 1 })
+    assert breakdown.valid?, breakdown.errors
+  end
+
+  def test_date_validation
+    breakdown = PlausibleApi::Stats::Breakdown.new({ date: 'foo' })
+    assert !breakdown.valid?, breakdown.errors
+    breakdown = PlausibleApi::Stats::Breakdown.new({ period: 'custom', date: 'foo' })
+    assert !breakdown.valid?, breakdown.errors
+    breakdown = PlausibleApi::Stats::Breakdown.new({ period: 'custom', date: 'foo,bar' })
+    assert !breakdown.valid?, breakdown.errors
+    breakdown = PlausibleApi::Stats::Breakdown.new({ period: 'custom', date: '2021-01-01,bar' })
+    assert !breakdown.valid?, breakdown.errors
+    breakdown = PlausibleApi::Stats::Breakdown.new({ period: 'custom', date: '2021-01-01,2021-01-30' })
     assert breakdown.valid?, breakdown.errors
   end
 end

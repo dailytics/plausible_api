@@ -43,6 +43,8 @@ module PlausibleApi
 
     private
     def call(api)      
+      raise StandardError.new "There is some invalid parameters." unless api.valid?
+      
       url = "#{BASE_URL}#{api.request_url.gsub('$SITE_ID', @site_id)}"
       uri = URI.parse(url)
 

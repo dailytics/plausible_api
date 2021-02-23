@@ -27,6 +27,7 @@ c.aggregate
 c.aggregate({ period: '30d' })
 c.aggregate({ period: '30d', metrics: 'visitors,pageviews' })
 c.aggregate({ period: '30d', metrics: 'visitors,pageviews', filters: 'event:page==/order/confirmation' })
+c.aggregate({ period: 'custom', date: '2021-01-01,2021-02-10' })
 
 # You'll get something like this:
 => {"bounce_rate"=>{"value"=>81.0}, "pageviews"=>{"value"=>29}, "visit_duration"=>{"value"=>247.0}, "visitors"=>{"value"=>14}}
@@ -42,9 +43,25 @@ c.timeseries
 # Set parameters (period, filters, interval)
 c.timeseries({ period: '7d' })
 c.timeseries({ period: '7d', filters: 'event:page==/order/confirmation' })
+c.timeseries({ period: 'custom', date: '2021-01-01,2021-02-15' })
 
 # You'll get something like this:
 => [{"date"=>"2021-01-11", "value"=>100}, {"date"=>"2021-01-12", "value"=>120}, {"date"=>"2021-01-13", "value"=>80}...]
+```
+
+### Stats > Breakdown
+```rb
+# Use the default parameters (30d, event:page)
+c.breakdown
+
+# Set parameters (property, period, metrics, limit, page, filters, date)
+c.breakdown({ property: 'visit:source' })
+c.breakdown({ property: 'visit:source', metrics: 'visitors,pageviews' })
+c.breakdown({ property: 'visit:source', metrics: 'visitors,pageviews', period: '30d' })
+c.breakdown({ property: 'visit:source', metrics: 'visitors,pageviews', period: 'custom', date: '2021-01-01,2021-02-01' })
+
+# You'll get something like this:
+=> [{"page"=>"/", "visitors"=>41}, {"page"=>"/plans/", "visitors"=>14}, {"page"=>"/agencies/", "visitors"=>8}, {"page"=>"/features/", "visitors"=>8}, {"page"=>"/ready/", "visitors"=>5}, {"page"=>"/contact/", "visitors"=>4}, {"page"=>"/about/", "visitors"=>3}, {"page"=>"/donate/", "visitors"=>3}]
 ```
 
 ### Realtime > Visitors

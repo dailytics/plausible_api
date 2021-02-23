@@ -1,8 +1,10 @@
 # frozen_string_literal: true
 
+require 'plausible_api/stats/base'
 require 'plausible_api/stats/realtime/visitors'
 require 'plausible_api/stats/aggregate'
 require 'plausible_api/stats/timeseries'
+require 'plausible_api/stats/breakdown'
 
 require 'json'
 require "net/http"
@@ -27,6 +29,10 @@ module PlausibleApi
       call PlausibleApi::Stats::Timeseries.new(options)
     end
 
+    def breakdown(options = {})
+      call PlausibleApi::Stats::Breakdown.new(options)
+    end
+
     def realtime_visitors
       call PlausibleApi::Stats::Realtime::Visitors.new
     end
@@ -37,6 +43,8 @@ module PlausibleApi
 
     private
     def call(api)      
+      raise StandardError.new "There is some invalid parameters." unless api.valid?
+      
       url = "#{BASE_URL}#{api.request_url.gsub('$SITE_ID', @site_id)}"
       uri = URI.parse(url)
 
@@ -46,7 +54,7 @@ module PlausibleApi
       http = Net::HTTP.new(uri.host, uri.port)
       http.use_ssl = true  
 
-      JSON.parse http.request(req).body
+      api.parse_response http.request(req).body
     end
   end
 end

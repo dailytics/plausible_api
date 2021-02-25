@@ -16,18 +16,18 @@ class PlausibleApiTimeseriesTest < Minitest::Test
   def test_filters_parameter
     timeseries = PlausibleApi::Stats::Timeseries.new({ filters: 'event:page==/order/confirmation' })
     assert_equal timeseries.request_url, 
-      '/api/v1/stats/timeseries?site_id=$SITE_ID&period=30d&filters=event%3Apage%3D%3D%2Forder%2Fconfirmation'
+      '/api/v1/stats/timeseries?site_id=$SITE_ID&filters=event%3Apage%3D%3D%2Forder%2Fconfirmation&period=30d'
   end
 
   def test_interval_parameter
     timeseries = PlausibleApi::Stats::Timeseries.new({ interval: 'month' })
     assert_equal timeseries.request_url, 
-      '/api/v1/stats/timeseries?site_id=$SITE_ID&period=30d&interval=month'
+      '/api/v1/stats/timeseries?site_id=$SITE_ID&interval=month&period=30d'
   end
 
   def test_all_parameters
     timeseries = PlausibleApi::Stats::Timeseries.new({ period: '7d', filters: 'event:page==/order/confirmation', interval: 'month' })
     assert_equal timeseries.request_url, 
-      '/api/v1/stats/timeseries?site_id=$SITE_ID&period=7d&filters=event%3Apage%3D%3D%2Forder%2Fconfirmation&interval=month'
+      '/api/v1/stats/timeseries?site_id=$SITE_ID&filters=event%3Apage%3D%3D%2Forder%2Fconfirmation&interval=month&period=7d'
   end
 end

@@ -3,18 +3,11 @@
 module PlausibleApi
   module Stats
     class Breakdown < Base
-      def initialize(options = {})
-        @property = options[:property] || 'event:page' # required
-        @period   = options[:period] || '30d' # required
-        @metrics  = options[:metrics]
-        @limit    = options[:limit]
-        @page     = options[:page]
-        @filters  = options[:filters]
-        @date     = options[:date]
-        @period = 'custom' if @date
-        
-      end
 
+      def initialize(options = {})
+        super({ period: '30d', property: 'event:page' }.merge(options))
+      end
+      
       def request_url_base
         "/api/v1/stats/breakdown?site_id=$SITE_ID"
       end

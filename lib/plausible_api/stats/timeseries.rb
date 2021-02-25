@@ -3,14 +3,11 @@
 module PlausibleApi
   module Stats
     class Timeseries < Base
-      def initialize(options = {})
-        @period   = options[:period] || '30d'
-        @filters  = options[:filters]
-        @interval = options[:interval]
-        @date     = options[:date]
-        @period = 'custom' if @date
-      end
 
+      def initialize(options = {})
+        super({ period: '30d' }.merge(options))
+      end
+      
       def request_url_base
         "/api/v1/stats/timeseries?site_id=$SITE_ID"
       end

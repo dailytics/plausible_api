@@ -3,8 +3,12 @@
 module PlausibleApi
   module Stats
     class Base
+
       def initialize(options = {})
-        raise NotImplementedError
+        @options = { compare: nil, date: nil, filters: nil, interval: nil,
+                      limit: nil, metrics: nil, page: nil, period: nil, 
+                      property: nil }.merge(options)
+        @options[:period] = 'custom' if @options[:date]
       end
 
       def request_url_base
@@ -12,17 +16,8 @@ module PlausibleApi
       end
 
       def request_url
-        url = request_url_base
-        url += "&period=#{@period}" if defined?(@period) && @period
-        url += "&metrics=#{@metrics}" if defined?(@metrics) && @metrics
-        url += "&filters=#{CGI.escape(@filters)}" if defined?(@filters) && @filters
-        url += "&compare=#{@compare}" if defined?(@compare) && @compare
-        url += "&interval=#{@interval}" if defined?(@interval) && @interval
-        url += "&property=#{@property}" if defined?(@property) && @property
-        url += "&limit=#{@limit}" if defined?(@limit) && @limit
-        url += "&page=#{@page}" if defined?(@page) && @page
-        url += "&date=#{@date}" if defined?(@date) && @date
-        url
+        params = @options.select{ |_,v| !v.to_s.empty? }
+        [request_url_base, URI.encode_www_form(params)].reject{|e| e.empty?}.join('&')
       end
 
       def parse_response(body)
@@ -38,45 +33,45 @@ module PlausibleApi
         allowed_metrics  = %w(visitors pageviews bounce_rate visit_duration)
         allowed_compare  = %w(previous_period)
         allowed_interval = %w(date month)
-        allowed_property = %w(event:page event:source event:referrer event:utm_medium 
-          event:utm_source event:utm_campaign event:device event:browser event:browser_version 
-          event:os event:os_version event:country)
+        allowed_property = %w(event:page visit:source visit:referrer visit:utm_medium 
+          visit:utm_source visit:utm_campaign visit:device visit:browser visit:browser_version 
+          visit:os visit:os_version visit:country)
         e = 'Not a valid parameter. Allowed parameters are: '
         
         errors = []
-        if defined?(@period) && @period
-          errors.push({ period: "#{e}#{allowed_period.join(', ')}" }) unless allowed_period.include? @period
+        if @options[:period]
+          errors.push({ period: "#{e}#{allowed_period.join(', ')}" }) unless allowed_period.include? @options[:period]
         end
-        if defined?(@metrics) && @metrics
-          metrics_array = @metrics.split(',') 
+        if @options[:metrics]
+          metrics_array = @options[:metrics].split(',') 
           errors.push({ metrics: "#{e}#{allowed_metrics.join(', ')}" }) unless metrics_array & allowed_metrics == metrics_array
         end
-        if defined?(@compare) && @compare
-          errors.push({ compare: "#{e}#{allowed_compare.join(', ')}" }) unless allowed_compare.include? @compare
+        if @options[:compare]
+          errors.push({ compare: "#{e}#{allowed_compare.join(', ')}" }) unless allowed_compare.include? @options[:compare]
         end
-        if defined?(@interval) && @interval
-          errors.push({ interval: "#{e}#{allowed_interval.join(', ')}" }) unless allowed_interval.include? @interval
+        if @options[:interval]
+          errors.push({ interval: "#{e}#{allowed_interval.join(', ')}" }) unless allowed_interval.include? @options[:interval]
         end
-        if defined?(@property) && @property
-          errors.push({ property: "#{e}#{allowed_property.join(', ')}" }) unless allowed_property.include? @property
+        if @options[:property]
+          errors.push({ property: "#{e}#{allowed_property.join(', ')}" }) unless allowed_property.include? @options[:property]
         end
-        if defined?(@filters) && @filters
-          filters_array = @filters.to_s.split(';')
+        if @options[:filters]
+          filters_array = @options[:filters].to_s.split(';')
           filters_array.each do |f|
             parts = f.split("==")
             errors.push({ filters: "Unrecognized filter: #{f}" }) unless parts.length == 2
             errors.push({ filters: "Unknown metric for filter: #{parts[0]}" }) unless allowed_property.include? parts[0]
           end
         end
-        if defined?(@limit) && @limit
-          errors.push({ limit: "Limit param must be a positive number" }) unless @limit.is_a? Integer and @limit > 0
+        if @options[:limit]
+          errors.push({ limit: "Limit param must be a positive number" }) unless @options[:limit].is_a? Integer and @options[:limit] > 0
         end
-        if defined?(@page) && @page
-          errors.push({ page: "Page param must be a positive number" }) unless @page.is_a? Integer and @page > 0
+        if @options[:page]
+          errors.push({ page: "Page param must be a positive number" }) unless @options[:page].is_a? Integer and @options[:page] > 0
         end
-        if defined?(@date) && @date
-          errors.push({ date: 'You must define the period parameter as custom' }) unless @period == 'custom'
-          date_array = @date.split(",")
+        if @options[:date]
+          errors.push({ date: 'You must define the period parameter as custom' }) unless @options[:period] == 'custom'
+          date_array = @options[:date].split(",")
           errors.push({ date: 'You must define start and end dates divided by comma' }) unless date_array.length == 2
           regex = /\d{4}\-\d{2}\-\d{2}/
           errors.push({ date: 'Wrong format for the start date' }) unless date_array[0] =~ regex

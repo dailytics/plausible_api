@@ -38,12 +38,17 @@ module PlausibleApi
     end
 
     def valid?
-      realtime_visitors.is_a? Integer
+      begin
+        realtime_visitors
+        return true
+      rescue
+        return false
+      end
     end
 
     private
     def call(api)      
-      raise StandardError.new "There is some invalid parameters." unless api.valid?
+      raise StandardError.new api.errors unless api.valid?
       
       url = "#{BASE_URL}#{api.request_url.gsub('$SITE_ID', @site_id)}"
       uri = URI.parse(url)
@@ -54,7 +59,13 @@ module PlausibleApi
       http = Net::HTTP.new(uri.host, uri.port)
       http.use_ssl = true  
 
-      api.parse_response http.request(req).body
+      response = http.request(req)
+
+      if response.code == "200"
+        api.parse_response response.body
+      else
+        raise StandardError.new response.body
+      end
     end
   end
 end

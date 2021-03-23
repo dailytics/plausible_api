@@ -15,7 +15,7 @@ module PlausibleApi
       end
 
       def parse_response(body)
-        JSON.parse body
+        JSON.parse(body)['results']
       end
     end
   end

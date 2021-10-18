@@ -1,12 +1,12 @@
 PATH
   remote: .
   specs:
-    plausible_api (0.1.8)
+    plausible_api (0.1.9)
 
 GEM
   remote: https://rubygems.org/
   specs:
-    minitest (5.14.3)
+    minitest (5.14.4)
     rake (12.3.3)
 
 PLATFORMS

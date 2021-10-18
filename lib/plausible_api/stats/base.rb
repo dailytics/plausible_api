@@ -6,7 +6,7 @@ module PlausibleApi
 
       def initialize(options = {})
         @options = { compare: nil, date: nil, filters: nil, interval: nil,
-                      limit: nil, metrics: nil, page: nil, period: nil, 
+                      limit: nil, metrics: nil, page: nil, period: nil,
                       property: nil }.merge(options)
         @options[:period] = 'custom' if @options[:date]
       end
@@ -28,22 +28,22 @@ module PlausibleApi
         errors.empty?
       end
 
-      def errors  
+      def errors
         allowed_period   = %w(12mo 6mo month 30d 7d day custom)
         allowed_metrics  = %w(visitors pageviews bounce_rate visit_duration)
         allowed_compare  = %w(previous_period)
         allowed_interval = %w(date month)
-        allowed_property = %w(event:page visit:source visit:referrer visit:utm_medium 
-          visit:utm_source visit:utm_campaign visit:device visit:browser visit:browser_version 
-          visit:os visit:os_version visit:country)
+        allowed_property = %w(event:page visit:entry_page visit:exit_page visit:source visit:referrer
+          visit:utm_medium visit:utm_source visit:utm_campaign visit:device visit:browser
+          visit:browser_version visit:os visit:os_version visit:country)
         e = 'Not a valid parameter. Allowed parameters are: '
-        
+
         errors = []
         if @options[:period]
           errors.push({ period: "#{e}#{allowed_period.join(', ')}" }) unless allowed_period.include? @options[:period]
         end
         if @options[:metrics]
-          metrics_array = @options[:metrics].split(',') 
+          metrics_array = @options[:metrics].split(',')
           errors.push({ metrics: "#{e}#{allowed_metrics.join(', ')}" }) unless metrics_array & allowed_metrics == metrics_array
         end
         if @options[:compare]

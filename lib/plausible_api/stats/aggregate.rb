@@ -6,7 +6,7 @@ module PlausibleApi
 
       def initialize(options = {})
         super({ period: '30d', 
-                metrics: 'visitors,pageviews,bounce_rate,visit_duration' }
+                metrics: 'visitors,visits,pageviews,views_per_visit,bounce_rate,visit_duration,events' }
               .merge(options))
       end
       

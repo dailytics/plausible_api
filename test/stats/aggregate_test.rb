@@ -4,13 +4,13 @@ class PlausibleApiAggregateTest < Minitest::Test
   def test_default_parameters
     aggregate = PlausibleApi::Stats::Aggregate.new
     assert_equal aggregate.request_url, 
-      '/api/v1/stats/aggregate?site_id=$SITE_ID&metrics=visitors%2Cpageviews%2Cbounce_rate%2Cvisit_duration&period=30d'
+      '/api/v1/stats/aggregate?site_id=$SITE_ID&metrics=visitors%2Cvisits%2Cpageviews%2Cviews_per_visit%2Cbounce_rate%2Cvisit_duration%2Cevents&period=30d'
   end
 
   def test_period_parameter
     aggregate = PlausibleApi::Stats::Aggregate.new({ period: '7d' })
     assert_equal aggregate.request_url,
-      '/api/v1/stats/aggregate?site_id=$SITE_ID&metrics=visitors%2Cpageviews%2Cbounce_rate%2Cvisit_duration&period=7d'
+      '/api/v1/stats/aggregate?site_id=$SITE_ID&metrics=visitors%2Cvisits%2Cpageviews%2Cviews_per_visit%2Cbounce_rate%2Cvisit_duration%2Cevents&period=7d'
   end
 
   def test_metrics_parameter
@@ -22,13 +22,13 @@ class PlausibleApiAggregateTest < Minitest::Test
   def test_filters_parameter
     aggregate = PlausibleApi::Stats::Aggregate.new({ filters: 'event:page==/order/confirmation' })
     assert_equal aggregate.request_url,
-      '/api/v1/stats/aggregate?site_id=$SITE_ID&filters=event%3Apage%3D%3D%2Forder%2Fconfirmation&metrics=visitors%2Cpageviews%2Cbounce_rate%2Cvisit_duration&period=30d'
+      '/api/v1/stats/aggregate?site_id=$SITE_ID&filters=event%3Apage%3D%3D%2Forder%2Fconfirmation&metrics=visitors%2Cvisits%2Cpageviews%2Cviews_per_visit%2Cbounce_rate%2Cvisit_duration%2Cevents&period=30d'
   end
 
   def test_compare_parameter
     aggregate = PlausibleApi::Stats::Aggregate.new({ compare: 'previous_period' })
     assert_equal aggregate.request_url,
-      '/api/v1/stats/aggregate?site_id=$SITE_ID&compare=previous_period&metrics=visitors%2Cpageviews%2Cbounce_rate%2Cvisit_duration&period=30d'
+      '/api/v1/stats/aggregate?site_id=$SITE_ID&compare=previous_period&metrics=visitors%2Cvisits%2Cpageviews%2Cviews_per_visit%2Cbounce_rate%2Cvisit_duration%2Cevents&period=30d'
   end
 
   def test_all_parameters

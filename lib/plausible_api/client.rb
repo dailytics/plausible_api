@@ -5,6 +5,7 @@ require 'plausible_api/stats/realtime/visitors'
 require 'plausible_api/stats/aggregate'
 require 'plausible_api/stats/timeseries'
 require 'plausible_api/stats/breakdown'
+require 'plausible_api/stats/event'
 
 require 'json'
 require "net/http"
@@ -13,7 +14,7 @@ require "cgi"
 
 module PlausibleApi
   class Client
-    
+
     BASE_URL = 'https://plausible.io'
 
     def initialize(site_id, token)
@@ -46,22 +47,31 @@ module PlausibleApi
       end
     end
 
+    def event(options = {})
+      call PlausibleApi::Stats::Event.new(options.merge(domain: @site_id))
+    end
+
     private
-    def call(api)      
+
+    SUCCESS_CODES = Set["200", "202"].freeze
+
+    def call(api)
       raise StandardError.new api.errors unless api.valid?
-      
+
       url = "#{BASE_URL}#{api.request_url.gsub('$SITE_ID', @site_id)}"
       uri = URI.parse(url)
 
-      req = Net::HTTP::Get.new(uri.request_uri)
-      req.add_field('Authorization', "Bearer #{@token}")
+      req = api.request_class.new(uri.request_uri)
+      req.initialize_http_header(api.request_headers)
+      req.add_field('authorization', "Bearer #{@token}") if api.request_auth?
+      req.body = api.request_body if api.request_body?
 
       http = Net::HTTP.new(uri.host, uri.port)
-      http.use_ssl = true  
+      http.use_ssl = true
 
       response = http.request(req)
 
-      if response.code == "200"
+      if SUCCESS_CODES.include?(response.code)
         api.parse_response response.body
       else
         raise StandardError.new response.body

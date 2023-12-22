@@ -73,6 +73,19 @@ c.realtime_visitors
 => 13
 ```
 
+### Events
+
+You can send an event like this:
+
+```rb
+# Example using Rack::Request in Rails for user_agent and ip.
+c.event(
+  name: "signup",
+  url: 'https://dailytics.com/users/new',
+  user_agent: request.user_agent,
+  ip: request.remote_ip,
+})
+```
 
 ## Development
 

@@ -15,9 +15,29 @@ module PlausibleApi
         raise NotImplementedError
       end
 
+      def request_class
+        Net::HTTP::Get
+      end
+
+      def request_body?
+        false
+      end
+
+      def request_body
+        nil
+      end
+
       def request_url
         params = @options.select{ |_,v| !v.to_s.empty? }
         [request_url_base, URI.encode_www_form(params)].reject{|e| e.empty?}.join('&')
+      end
+
+      def request_headers
+        {}
+      end
+
+      def request_auth?
+        true
       end
 
       def parse_response(body)

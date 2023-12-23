@@ -1,9 +1,11 @@
 # frozen_string_literal: true
 
 module PlausibleApi
-  module Stats
-    class Event < Base
+  module Event
+    class Post < Base
       DEFAULT_USER_AGENT = "plausible_api_ruby/#{PlausibleApi::VERSION}"
+      VALID_REVENUE_KEYS = %i[amount currency].freeze
+      OPTIONS_IN_HEADERS = %i[ip user_agent].freeze
 
       attr_reader :domain
       attr_reader :ip, :user_agent, :url
@@ -12,43 +14,21 @@ module PlausibleApi
       def initialize(options = {})
         @options = options.transform_keys(&:to_sym)
 
-        @domain = maybe_string(@options[:domain])
-        @ip = maybe_string(@options[:ip])
-        @user_agent = maybe_string(@options[:user_agent], default: DEFAULT_USER_AGENT)
-
-        @name = maybe_string(@options[:name], default: "pageview")
-        @url = maybe_string(@options[:url], default: "app://localhost/#{@name}")
-        @referrer = maybe_string(@options[:referrer])
-
+        @domain = @options[:domain]
+        @ip = @options[:ip]
+        @user_agent = presence(@options[:user_agent]) || DEFAULT_USER_AGENT
+        @name = presence(@options[:name]) || "pageview"
+        @url = presence(@options[:url]) || "app://localhost/#{@name}"
+        @referrer = @options[:referrer]
         @revenue = @options[:revenue]
         @props = @options[:props]
-      end
-
-      def request_class
-        Net::HTTP::Post
-      end
-
-      def request_url_base
-        "/api/event"
-      end
-
-      def request_url
-        request_url_base
-      end
-
-      def request_auth?
-        false
-      end
-
-      def request_body?
-        true
       end
 
       def request_body
         data = {
           url: @url,
           name: @name,
-          domain: @domain,
+          domain: @domain
         }
 
         data[:props] = @props if present?(@props)
@@ -60,18 +40,16 @@ module PlausibleApi
 
       def request_headers
         headers = {
-          'content-type' => 'application/json',
-          'user-agent' => @user_agent,
+          "content-type" => "application/json",
+          "user-agent" => @user_agent
         }
-        headers['x-forwarded-for'] = @ip if present?(@ip)
+        headers["x-forwarded-for"] = @ip if present?(@ip)
         headers
       end
 
       def parse_response(body)
         body == "ok"
       end
-
-      VALID_REVENUE_KEYS = [:amount, :currency].freeze
 
       def errors
         errors = []
@@ -84,8 +62,8 @@ module PlausibleApi
           if @revenue.is_a?(Hash)
             unless valid_revenue_keys?(@revenue)
               errors.push(
-                revenue: "revenue must have keys #{VALID_REVENUE_KEYS.join(', ')} " +
-                         "but was #{@revenue.inspect}",
+                revenue: "revenue must have keys #{VALID_REVENUE_KEYS.join(", ")} " \
+                         "but was #{@revenue.inspect}"
               )
             end
           else
@@ -114,10 +92,9 @@ module PlausibleApi
         !present?(value)
       end
 
-      def maybe_string(value, default: nil)
-        return default if value.nil?
-        value = value.to_s.strip
-        value.empty? ? default : value
+      def presence(value)
+        return nil if blank?(value)
+        value
       end
     end
   end

@@ -9,7 +9,7 @@ gem 'plausible_api'
 ```
 Then you need to initialize a Client with your `site_id` (the domain) and your `token`.
 ```rb
-c = PlausibleApi::Client.new('dailytics.com', '123123') 
+c = PlausibleApi::Client.new('dailytics.com', '123123')
 
 # Test if the site and token are valid
 c.valid?
@@ -79,11 +79,11 @@ You can send an event like this:
 
 ```rb
 # Example using Rack::Request in Rails for user_agent and ip.
-c.event(
+c.event({
   name: "signup",
   url: 'https://dailytics.com/users/new',
-  user_agent: request.user_agent,
-  ip: request.remote_ip,
+  user_agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.3",
+  ip: "127.0.0.1"
 })
 ```
 

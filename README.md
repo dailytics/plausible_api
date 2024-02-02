@@ -93,8 +93,9 @@ c.event({
 If you are using a self-hosted Plausible instance, you can set the `base_url` before initializing the client. On a Ruby on Rails app, you can add this to an initializer like `config/initializers/plausible.rb`
 
 ```rb
+# Do not include a trailing slash
 PlausibleApi.configure do |config|
-  config.base_url = "https://your-plausible-instance.com/"
+  config.base_url = "https://your-plausible-instance.com"
 end
 ```
 

@@ -90,7 +90,7 @@ c.event({
 
 ### Self-Hosted Plausible instances
 
-If you are using a self-hosted Plausible instance, you can set the `base_url` prior to initializing the client.
+If you are using a self-hosted Plausible instance, you can set the `base_url` before initializing the client. On a Ruby on Rails app, you can add this to an initializer like `config/initializers/plausible.rb`
 
 ```rb
 PlausibleApi.configure do |config|

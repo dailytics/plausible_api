@@ -56,7 +56,7 @@ module PlausibleApi
     def call(api)
       raise StandardError.new api.errors unless api.valid?
 
-      url = "#{BASE_URL}#{api.request_url.gsub("$SITE_ID", @site_id)}"
+      url = "#{PlausibleApi.configuration.base_url}#{api.request_url.gsub("$SITE_ID", @site_id)}"
       uri = URI.parse(url)
 
       req = api.request_class.new(uri.request_uri)

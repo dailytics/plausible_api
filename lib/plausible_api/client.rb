@@ -15,8 +15,6 @@ require "cgi"
 
 module PlausibleApi
   class Client
-    BASE_URL = "https://plausible.io"
-
     def initialize(site_id, token)
       @site_id = site_id.to_s
       @token = token.to_s

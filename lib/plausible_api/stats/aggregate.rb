@@ -5,11 +5,11 @@ module PlausibleApi
     class Aggregate < Base
 
       def initialize(options = {})
-        super({ period: '30d', 
+        super({ period: '30d',
                 metrics: 'visitors,visits,pageviews,views_per_visit,bounce_rate,visit_duration,events' }
               .merge(options))
       end
-      
+
       def request_url_base
         "/api/v1/stats/aggregate?site_id=$SITE_ID"
       end

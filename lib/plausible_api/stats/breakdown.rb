@@ -7,7 +7,7 @@ module PlausibleApi
       def initialize(options = {})
         super({ period: '30d', property: 'event:page' }.merge(options))
       end
-      
+
       def request_url_base
         "/api/v1/stats/breakdown?site_id=$SITE_ID"
       end

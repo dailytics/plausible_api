@@ -7,7 +7,7 @@ module PlausibleApi
       def initialize(options = {})
         super({ period: '30d' }.merge(options))
       end
-      
+
       def request_url_base
         "/api/v1/stats/timeseries?site_id=$SITE_ID"
       end

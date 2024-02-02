@@ -15,8 +15,6 @@ require "cgi"
 
 module PlausibleApi
   class Client
-    BASE_URL = "https://plausible.io"
-
     def initialize(site_id, token)
       @site_id = site_id.to_s
       @token = token.to_s
@@ -54,9 +52,10 @@ module PlausibleApi
     SUCCESS_CODES = %w[200 202].freeze
 
     def call(api)
-      raise StandardError.new api.errors unless api.valid?
+      raise Error, api.errors unless api.valid?
+      raise ConfigurationError, PlausibleApi.configuration.errors unless PlausibleApi.configuration.valid?
 
-      url = "#{BASE_URL}#{api.request_url.gsub("$SITE_ID", @site_id)}"
+      url = "#{PlausibleApi.configuration.base_url}#{api.request_url.gsub("$SITE_ID", @site_id)}"
       uri = URI.parse(url)
 
       req = api.request_class.new(uri.request_uri)

@@ -52,7 +52,8 @@ module PlausibleApi
     SUCCESS_CODES = %w[200 202].freeze
 
     def call(api)
-      raise StandardError.new api.errors unless api.valid?
+      raise Error, api.errors unless api.valid?
+      raise ConfigurationError, PlausibleApi.configuration.errors unless PlausibleApi.configuration.valid?
 
       url = "#{PlausibleApi.configuration.base_url}#{api.request_url.gsub("$SITE_ID", @site_id)}"
       uri = URI.parse(url)

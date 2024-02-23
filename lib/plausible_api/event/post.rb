@@ -3,7 +3,6 @@
 module PlausibleApi
   module Event
     class Post < Base
-      DEFAULT_USER_AGENT = "plausible_api_ruby/#{PlausibleApi::VERSION}"
       VALID_REVENUE_KEYS = %i[amount currency].freeze
       OPTIONS_IN_HEADERS = %i[ip user_agent].freeze
 
@@ -16,7 +15,7 @@ module PlausibleApi
 
         @domain = @options[:domain]
         @ip = @options[:ip]
-        @user_agent = presence(@options[:user_agent]) || DEFAULT_USER_AGENT
+        @user_agent = presence(@options[:user_agent]) || PlausibleApi.configuration.default_user_agent
         @name = presence(@options[:name]) || "pageview"
         @url = presence(@options[:url]) || "app://localhost/#{@name}"
         @referrer = @options[:referrer]
@@ -60,10 +59,10 @@ module PlausibleApi
 
         if present?(@revenue)
           if @revenue.is_a?(Hash)
-            unless valid_revenue_keys?(@revenue)
+            unless @revenue.keys.map(&:to_sym).all? { |key| VALID_REVENUE_KEYS.include?(key) }
               errors.push(
                 revenue: "revenue must have keys #{VALID_REVENUE_KEYS.join(", ")} " \
-                         "but was #{@revenue.inspect}"
+                        "but was #{@revenue.inspect}"
               )
             end
           else
@@ -82,19 +81,6 @@ module PlausibleApi
 
       def valid_revenue_keys?(revenue)
         revenue.keys.sort.map(&:to_sym) == VALID_REVENUE_KEYS.sort
-      end
-
-      def present?(value)
-        !value.nil? && !value.empty?
-      end
-
-      def blank?(value)
-        !present?(value)
-      end
-
-      def presence(value)
-        return nil if blank?(value)
-        value
       end
     end
   end

@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-module PlausibleApi 
+module PlausibleApi
   module Stats
     module Realtime
       class Visitors < PlausibleApi::Stats::Base
-        def request_url_base
+        def request_path_base
           "/api/v1/stats/realtime/visitors?site_id=$SITE_ID"
         end
 

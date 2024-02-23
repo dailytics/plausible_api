@@ -27,8 +27,7 @@ class PlausibleApiEventPostTest < Minitest::Test
 
   def test_request_url_base
     event = PlausibleApi::Event::Post.new(@options)
-    assert_equal event.request_url, "/api/event"
-    assert_equal event.request_url_base, "/api/event"
+    assert_equal event.request_path, "/api/event"
   end
 
   def test_request_body_predicate

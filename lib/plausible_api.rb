@@ -7,7 +7,6 @@ module PlausibleApi
 
   class ConfigurationError < StandardError; end
 
-  # Your code goes here...
   class << self
     def configuration
       @configuration ||= Configuration.new

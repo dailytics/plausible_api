@@ -7,13 +7,36 @@ Add this gem to your Gemfile:
 ```rb
 gem 'plausible_api'
 ```
-Then you need to initialize a Client with your `site_id` (the domain) and your `token`.
+Then you need to initialize a Client with your `site_id` (the domain) and your `api_key`.
+Optionally, you can pass a third parameter in case you are using a self-hosted instance of Plausible (You don't need to add this third parameter if your are using the comercial version of Plausible).
 ```rb
-c = PlausibleApi::Client.new('dailytics.com', '123123')
+# Using the comercial version:
+c = PlausibleApi::Client.new("mysite.com", "MYAPIKEY")
+
+# Using a self hosted instance
+c = PlausibleApi::Client.new("mysite.com", "MYAPIKEY", "https://my-hosted-plausible.com")
 
 # Test if the site and token are valid
 c.valid?
 => true
+```
+
+If you will always work with the same site, you can set some (or all) of these 3 parameters
+before initializing the client. On a Ruby on Rails app, you can add this to an initializer like
+`config/initializers/plausible.rb`
+
+```rb
+# Do not include a trailing slash
+PlausibleApi.configure do |config|
+  config.base_url = "https://your-plausible-instance.com"
+  config.site_id = "dailytics.com"
+  config.api_key = "123123"
+end
+```
+
+And then, initializing the client simply like this:
+```rb
+c = PlausibleApi::Client.new
 ```
 
 ### Stats > Aggregate
@@ -85,18 +108,6 @@ c.event({
   user_agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.3",
   ip: "127.0.0.1"
 })
-```
-
-
-### Self-hosted Plausible instances
-
-If you are using a self-hosted Plausible instance, you can set the `base_url` before initializing the client. On a Ruby on Rails app, you can add this to an initializer like `config/initializers/plausible.rb`
-
-```rb
-# Do not include a trailing slash
-PlausibleApi.configure do |config|
-  config.base_url = "https://your-plausible-instance.com"
-end
 ```
 
 ## Development

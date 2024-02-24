@@ -9,7 +9,7 @@ module PlausibleApi
     end
 
     def presence(value)
-      return nil if blank?(value)
+      return false if blank?(value)
       value
     end
   end

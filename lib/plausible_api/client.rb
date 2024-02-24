@@ -20,11 +20,11 @@ module PlausibleApi
 
     attr_accessor :configuration
 
-    def initialize(site_id: nil, api_key: nil, base_url: nil)
-      @configuration = PlausibleApi.configuration
-      @configuration.api_key = api_key if present? api_key
-      @configuration.site_id = site_id if present? site_id
-      @configuration.base_url = base_url if present? base_url
+    def initialize(site_id = nil, api_key = nil, base_url = nil)
+      @configuration = Configuration.new
+      @configuration.api_key = presence(api_key) || PlausibleApi.configuration.api_key
+      @configuration.site_id = presence(site_id) || PlausibleApi.configuration.site_id
+      @configuration.base_url = presence(base_url) || PlausibleApi.configuration.base_url
     end
 
     def aggregate(options = {})

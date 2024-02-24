@@ -41,4 +41,15 @@ class PlausibleApiConfigurationTest < Minitest::Test
     PlausibleApi.configuration.site_id = nil
     assert_equal false, PlausibleApi.configuration.valid?
   end
+
+  def test_configure_method
+    PlausibleApi.configure do |config|
+      config.base_url = "https://anotherexample.com"
+      config.site_id = "anotherdailytics.com"
+      config.api_key = "anothertoken"
+    end
+    assert_equal PlausibleApi.configuration.base_url, "https://anotherexample.com"
+    assert_equal PlausibleApi.configuration.site_id, "anotherdailytics.com"
+    assert_equal PlausibleApi.configuration.api_key, "anothertoken"
+  end
 end

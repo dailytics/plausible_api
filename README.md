@@ -8,13 +8,13 @@ Add this gem to your Gemfile:
 gem 'plausible_api'
 ```
 Then you need to initialize a Client with your `site_id` (the domain) and your `api_key`.
-Optionally, you can pass a third parameter called `base_url`, in case you are using a self-hosted instance of Plausible (You don't need to add this third parameter if your are using the comercial version of Plausible).
+Optionally, you can pass a third parameter in case you are using a self-hosted instance of Plausible (You don't need to add this third parameter if your are using the comercial version of Plausible).
 ```rb
 # Using the comercial version:
-c = PlausibleApi::Client.new(site_id: "dailytics.com", api_key: "123123")
+c = PlausibleApi::Client.new("mysite.com", "MYAPIKEY")
 
 # Using a self hosted instance
-c = PlausibleApi::Client.new(site_id: "dailytics.com", api_key: "123123", base_url: "https://my-hosted-plausible.com")
+c = PlausibleApi::Client.new("mysite.com", "MYAPIKEY", "https://my-hosted-plausible.com")
 
 # Test if the site and token are valid
 c.valid?

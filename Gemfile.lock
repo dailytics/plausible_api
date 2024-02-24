@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    plausible_api (0.3)
+    plausible_api (0.4)
 
 GEM
   remote: https://rubygems.org/

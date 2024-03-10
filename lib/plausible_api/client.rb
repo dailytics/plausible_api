@@ -51,7 +51,7 @@ module PlausibleApi
     end
 
     def event(options = {})
-      call PlausibleApi::Event::Post.new(options.merge(domain: @site_id))
+      call PlausibleApi::Event::Post.new(options.merge(domain: configuration.site_id))
     end
 
     private
